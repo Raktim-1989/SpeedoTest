@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -33,7 +34,7 @@ public class SpeedoMasterSheet {
 	static String timestamp;
 	static String filestamp;
 	static int lastrow;
-	
+	static Properties properties;
 	
 	public static void getDataReportAppend() throws IOException
 	{
@@ -51,7 +52,9 @@ public class SpeedoMasterSheet {
 	    driver.findElement(By.xpath("//span[contains(text(),'Go')]")).click();
 		Thread.sleep(50000);
 		int counter = 0;
-		while(counter <5)
+		String prop = properties.getProperty("count");
+		int size = Integer.parseInt(prop);
+		while(counter < size)
 		{
 		
 		String name = driver.findElement(By.xpath("//*[@class = 'result-container-data']/div[1]/div/div[2]/span")).getText();
@@ -102,6 +105,11 @@ public class SpeedoMasterSheet {
 		fos.close();
 	
 	}
+		finally
+		{
+			driver.close();
+		}
+		
 		
 	}
 	
@@ -109,7 +117,8 @@ public class SpeedoMasterSheet {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		driver = SpeedoInternetConnection.getDriver();
+		properties = ManagerTest.setProperties();
+		driver = SpeedoInternetConnection.getDriver(properties);
 		getDataReportAppend();
 		
 

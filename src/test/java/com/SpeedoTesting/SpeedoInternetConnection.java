@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Properties;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,6 +41,7 @@ public class SpeedoInternetConnection {
 	static String filestamp;
 	static int lastrow;
 	static WebDriver driver;
+	static Properties properties;
 	
     /*-------------------------------------------------------------------------------------
     |  Method [getExcel]
@@ -87,10 +89,10 @@ public static void getCurrentTime()
 	System.out.println(filestamp);
 }
 
-	public static WebDriver getDriver() {
+	public static WebDriver getDriver(Properties properties) {
 		System.setProperty("webdriver.chrome.driver", "Drivers/chromedriver.exe");
 		 driver = new ChromeDriver();
-		driver.get("https://www.speedtest.net/");
+		driver.get(properties.getProperty("URL"));
 		driver.manage().window().maximize();
 		return driver;
 	}
@@ -234,6 +236,11 @@ public static void getHeadername()
 		fos.close();
 	
 	}
+		finally
+		{
+			driver.close();
+		}
+
 
 	}
 	
@@ -304,7 +311,7 @@ public static void getHeadername()
 		fos.close();
 	
 	}
-
+		
 
 		
 		
@@ -315,7 +322,8 @@ public static void getHeadername()
 ////////////////////Main Method/////////////////////////
 	public static void main(String[] args) throws InterruptedException, IOException
 	{
-		getDriver();
+		properties = ManagerTest.setProperties();
+		getDriver(properties);
 		getCurrentTime();
 		createDataReportMaster();
 		//getDataReportAppend(timestamp);
